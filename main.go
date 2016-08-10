@@ -11,10 +11,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
-	"sync"
 )
-
-var once sync.Once
 
 const ERR = "Error! Please, check status and body to get error details"
 
