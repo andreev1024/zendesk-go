@@ -146,11 +146,9 @@ func (a *API) UpdateUserProfileImage(userId int, imagePath, imageLink string) (b
 	}
 
 	if len(imageLink) > 0 {
-		r := map[string]map[string]string{
-			"user": map[string]string{
-				"remote_photo_url": imageLink,
-			},
-		}
+		r := UserNIWrapper{User: struct {
+			RemotePhotoUrl string `json:"remote_photo_url"`
+		}{RemotePhotoUrl: imageLink}}
 
 		var reqData []byte
 		reqData, err = json.Marshal(r)
