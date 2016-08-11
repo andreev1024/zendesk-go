@@ -101,7 +101,7 @@ type CreateTicketRes struct {
 	Ticket Ticket `json:"ticket"`
 }
 
-func (a API) CreateTicket(req interface{}) (t CreateTicketRes, body []byte, res *http.Response, err error) {
+func (a *API) CreateTicket(req interface{}) (t CreateTicketRes, body []byte, res *http.Response, err error) {
 	reqData, err := json.Marshal(TicketNIWrapper{Ticket: req})
 	if err != nil {
 		a.HandleError(err)
@@ -128,7 +128,7 @@ type CreateTicketAsyncRes struct {
 	JobStatus JobStatus `json:"job_status"`
 }
 
-func (a API) CreateTicketAsync(req interface{}) (r CreateTicketAsyncRes, body []byte, res *http.Response, err error) {
+func (a *API) CreateTicketAsync(req interface{}) (r CreateTicketAsyncRes, body []byte, res *http.Response, err error) {
 	reqData, err := json.Marshal(TicketNIWrapper{Ticket: req})
 	if err != nil {
 		a.HandleError(err)
@@ -148,7 +148,7 @@ func (a API) CreateTicketAsync(req interface{}) (r CreateTicketAsyncRes, body []
 	return
 }
 
-func (a API) ShowTicket(id int) (t Ticket, body []byte, res *http.Response, err error) {
+func (a *API) ShowTicket(id int) (t Ticket, body []byte, res *http.Response, err error) {
 	body, res, err = a.Send(http.MethodGet, fmt.Sprintf("tickets/%v.json", id), nil)
 	if err != nil {
 		a.HandleError(err)
@@ -163,7 +163,7 @@ func (a API) ShowTicket(id int) (t Ticket, body []byte, res *http.Response, err 
 	return
 }
 
-func (a API) ShowTickets(ids []int) (t []Ticket, body []byte, res *http.Response, err error) {
+func (a *API) ShowTickets(ids []int) (t []Ticket, body []byte, res *http.Response, err error) {
 	var idsString []string
 	for _, v := range ids {
 		idsString = append(idsString, strconv.Itoa(v))
@@ -183,7 +183,7 @@ func (a API) ShowTickets(ids []int) (t []Ticket, body []byte, res *http.Response
 	return
 }
 
-func (a API) ListTickets(url, sortBy, sortOrder string) (t []Ticket, body []byte, res *http.Response, err error) {
+func (a *API) ListTickets(url, sortBy, sortOrder string) (t []Ticket, body []byte, res *http.Response, err error) {
 	if len(url) == 0 {
 		err = fmt.Errorf("Required argument's missed (url)")
 		return

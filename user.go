@@ -61,7 +61,7 @@ type Attachment struct {
 	Thumbnails  []*Attachment `json:"thumbnails,omitempty"`
 }
 
-func (a API) CreateUser(req interface{}) (u User, body []byte, res *http.Response, err error) {
+func (a *API) CreateUser(req interface{}) (u User, body []byte, res *http.Response, err error) {
 	reqData, err := json.Marshal(UserNIWrapper{User: req})
 	if err != nil {
 		a.HandleError(err)
@@ -82,7 +82,7 @@ func (a API) CreateUser(req interface{}) (u User, body []byte, res *http.Respons
 	return
 }
 
-func (a API) ShowUser(userId int) (u User, body []byte, res *http.Response, err error) {
+func (a *API) ShowUser(userId int) (u User, body []byte, res *http.Response, err error) {
 	body, res, err = a.Send(http.MethodGet, fmt.Sprintf("users/%v.json", userId), nil)
 	if err != nil {
 		a.HandleError(err)
@@ -97,7 +97,7 @@ func (a API) ShowUser(userId int) (u User, body []byte, res *http.Response, err 
 	return
 }
 
-func (a API) UpdateUser(userId int, req interface{}) (u User, body []byte, res *http.Response, err error) {
+func (a *API) UpdateUser(userId int, req interface{}) (u User, body []byte, res *http.Response, err error) {
 	reqData, err := json.Marshal(UserNIWrapper{User: req})
 	if err != nil {
 		a.HandleError(err)
@@ -118,7 +118,7 @@ func (a API) UpdateUser(userId int, req interface{}) (u User, body []byte, res *
 	return
 }
 
-func (a API) SetUserPassword(userId int, newPassword string) (body []byte, res *http.Response, err error) {
+func (a *API) SetUserPassword(userId int, newPassword string) (body []byte, res *http.Response, err error) {
 	r := struct {
 		Password string `json:"password"`
 	}{
@@ -138,7 +138,7 @@ func (a API) SetUserPassword(userId int, newPassword string) (body []byte, res *
 	return
 }
 
-func (a API) UpdateUserProfileImage(userId int, imagePath, imageLink string) (body []byte, res *http.Response, err error) {
+func (a *API) UpdateUserProfileImage(userId int, imagePath, imageLink string) (body []byte, res *http.Response, err error) {
 	url := fmt.Sprintf("users/%v.json", userId)
 	if len(imagePath) > 0 {
 		body, res, err = a.SendFile(http.MethodPut, url, "user[photo][uploaded_data]", imagePath)

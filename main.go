@@ -37,7 +37,7 @@ func NewAPI(email, token, host string, errorHandler ...func(err error)) *API {
 	}
 }
 
-func (a API) Send(method, url string, reqData []byte) (body []byte, httpResp *http.Response, err error) {
+func (a *API) Send(method, url string, reqData []byte) (body []byte, httpResp *http.Response, err error) {
 	url = a.prepareUrl(url)
 	req, err := http.NewRequest(method, url, bytes.NewBuffer(reqData))
 	if err != nil {
@@ -52,7 +52,7 @@ func (a API) Send(method, url string, reqData []byte) (body []byte, httpResp *ht
 	return
 }
 
-func (a API) SendFile(method string, url string, paramName, path string) (body []byte, httpResp *http.Response, err error) {
+func (a *API) SendFile(method string, url string, paramName, path string) (body []byte, httpResp *http.Response, err error) {
 	url = a.prepareUrl(url)
 
 	file, err := os.Open(path)
@@ -83,7 +83,7 @@ func (a API) SendFile(method string, url string, paramName, path string) (body [
 	return
 }
 
-func (a API) sendRequest(req *http.Request) (body []byte, httpResp *http.Response, err error) {
+func (a *API) sendRequest(req *http.Request) (body []byte, httpResp *http.Response, err error) {
 	a.useTokenAuth(req)
 
 	client := http.DefaultClient
@@ -118,15 +118,15 @@ func (a API) sendRequest(req *http.Request) (body []byte, httpResp *http.Respons
 	return
 }
 
-func (a API) useTokenAuth(req *http.Request) {
+func (a *API) useTokenAuth(req *http.Request) {
 	req.SetBasicAuth(a.email+"/token", a.token)
 }
 
-func (a API) prepareUrl(u string) string {
+func (a *API) prepareUrl(u string) string {
 	return strings.Join([]string{a.host, "api/v2", u}, "/")
 }
 
-func (a API) HandleError(err error) {
+func (a *API) HandleError(err error) {
 	if a.errorHandler != nil {
 		a.errorHandler(err)
 		return
